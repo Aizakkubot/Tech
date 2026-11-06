@@ -1,14 +1,23 @@
 package br.com.bugnacio.techos.controller;
 
+import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.bugnacio.techos.model.Cliente;
 import br.com.bugnacio.techos.repository.ClienteRepository;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+
 
 // @Controller: bean do Spring, a recepcao dos pedidos de clientes.
 @Controller
@@ -38,4 +47,47 @@ public class ClienteController {
         // Abre: src/main/resources/templates/clientes/lista.html
         return "clientes/lista";
     }
+
+    // Get /clientes/novo: mostra o formulario para criar um novo cliente.
+    @GetMapping("/novo")
+    public String novo(Model model) {
+
+        model.addAttribute("cliente", new Cliente());
+        
+        return "clientes/form";
+    }
+    
+    @PostMapping("/salvar")
+    public String salvar(Cliente cliente, RedirectAttributes redirect) {
+ 
+     repo.save(cliente);
+    
+     redirect.addFlashAttribute("mensagem", "Cliente salvo com sucesso!");
+     return "redirect:/clientes";
 }
+    
+@PostMapping("{id}/excluir")
+public String deletar(@PathVariable Long id, RedirectAttributes redirect) {
+
+    repo.deleteById(id);
+
+    redirect.addFlashAttribute("mensagem", "Cliente excluído com sucesso!");
+
+    return "redirect:/clientes";
+}
+
+
+
+@GetMapping("/{id}/editar")
+public String editar(@PathVariable Long id, Model model) {
+
+    Cliente cliente = repo.findById(id).get();
+
+    model.addAttribute("cliente", cliente);
+
+    return "editar";
+}
+}
+
+
+    
