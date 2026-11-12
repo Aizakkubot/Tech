@@ -1,25 +1,27 @@
+
 package br.com.bugnacio.techos.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
-@Entity 
+@Entity
 public class Equipamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull (message = "Selecione o equipamento")
-    @Enumerated (EnumType.String)
+    @NotNull(message = "Selecione o tipo do equipamento")
+    @Enumerated(EnumType.STRING)
     private TipoEquipamento tipo;
 
     @NotBlank(message = "Informe a marca")
@@ -30,10 +32,11 @@ public class Equipamento {
 
     private String numeroSerie;
 
-    @(message = "cliente_id")
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    public Cliente() {
+    public Equipamento() {
     }
 
     public Long getId() {
@@ -44,27 +47,43 @@ public class Equipamento {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public TipoEquipamento getTipo() {
+        return tipo;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setTipo(TipoEquipamento tipo) {
+        this.tipo = tipo;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public String getMarca() {
+        return marca;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public void setMarca(String marca) {
+        this.marca = marca;
     }
 
-    public String getEmail() {
-        return email;
+    public String getModelo() {
+        return modelo;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+    public String getNumeroSerie() {
+        return numeroSerie;
+    }
+
+    public void setNumeroSerie(String numeroSerie) {
+        this.numeroSerie = numeroSerie;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 }
