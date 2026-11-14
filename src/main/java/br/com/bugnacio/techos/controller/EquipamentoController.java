@@ -1,25 +1,26 @@
 package br.com.bugnacio.techos.controller;
 
-import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Sort;
-import br.com.bugnacio.techos.model.Cliente;
 import br.com.bugnacio.techos.model.Equipamento;
 import br.com.bugnacio.techos.model.TipoEquipamento;
 import br.com.bugnacio.techos.repository.ClienteRepository;
 import br.com.bugnacio.techos.repository.EquipamentoRepository;
 import jakarta.validation.Valid;
+
+
 
 
 @Controller
@@ -52,7 +53,7 @@ public class EquipamentoController {
     public String novo(Model model) {
         model.addAttribute("equipamento", new Equipamento());
         carregarCombos(model);
-        return "equipamento/form";
+        return "equipamentos/form";
     }
 
     // CREATE (2/2) e UPDATE
@@ -69,7 +70,7 @@ public class EquipamentoController {
 
                     carregarCombos(model);
 
-                    return "equipamento/form";
+                    return "equipamentos/form";
                     
                 }
 
@@ -81,8 +82,32 @@ public class EquipamentoController {
                     "mensagem",
                     "Equipamento cadastrado com sucesso!");                   
 
-                   return "redirect:/equipamento";
+                   return "redirect:/equipamentos";
             }
+
+             // DELETE.
+    @PostMapping("/{id}/excluir")
+    public String excluir(@PathVariable("id") Long id, RedirectAttributes redirect) {
+        repo.deleteById(id);
+        redirect.addFlashAttribute("mensagem", "Equipamento excluído.");
+        return "redirect:/equipamentos";
+    }
+
+    // UPDATE (1/2): formulario preenchido.
+    @GetMapping("{id}/editar")
+    public String editar(@PathVariable Long id,
+        Model model, RedirectAttributes redirect) {
+            Optional<Equipamento> equipamento = repo.findById(id);
+            if (equipamento.isEmpty()) {
+                redirect.addFlashAttribute("mensagem", "Equipamento não encontrado.");
+                return "redirect:/equipamentos";
+            }
+            model.addAttribute("equipamento", equipamento.get());
+            carregarCombos(model);
+            return "equipamentos/form";
+        }
+    
+    
 
 //carrega combo
 
@@ -94,4 +119,6 @@ public class EquipamentoController {
         model.addAttribute("tipos",
                 TipoEquipamento.values());
     }
+
+//
 }

@@ -142,5 +142,6 @@ public class ClienteController {
         repo.deleteById(id);
         redirect.addFlashAttribute("mensagem", "Cliente excluído.");
         return "redirect:/clientes";
+        
     }
 }
