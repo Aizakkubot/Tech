@@ -47,7 +47,7 @@ public class EquipamentoController {
 
     return "equipamentos/lista";
     }
-
+    
     // CREATE (1/2): formulario vazi
     @GetMapping("/novo")
     public String novo(Model model) {
@@ -80,7 +80,7 @@ public class EquipamentoController {
 
             redirect.addFlashAttribute(
                     "mensagem",
-                    "Equipamento cadastrado com sucesso!");                   
+                    "Equipamento salvo com sucesso!");                   
 
                    return "redirect:/equipamentos";
             }
