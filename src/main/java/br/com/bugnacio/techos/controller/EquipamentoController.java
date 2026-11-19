@@ -1,6 +1,6 @@
 package br.com.bugnacio.techos.controller;
 
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
@@ -40,21 +41,32 @@ public class EquipamentoController {
     
 
     //lsitar
-    @GetMapping
-    public String listar(Model model) {
+@GetMapping
+public String listar(Model model) {
 
-   model.addAttribute("equipamentos", repo.findAll());
+    model.addAttribute("equipamentos", repo.findAll());
 
     return "equipamentos/lista";
-    }
-    
-    // CREATE (1/2): formulario vazi
-    @GetMapping("/novo")
-    public String novo(Model model) {
-        model.addAttribute("equipamento", new Equipamento());
-        carregarCombos(model);
-        return "equipamentos/form";
-    }
+}
+
+// PESQUISAR
+@GetMapping("/buscar")
+public String buscar(@RequestParam String nome, Model model) {
+
+    model.addAttribute("equipamentos",
+            repo.findByMarcaContainingIgnoreCaseOrModeloContainingIgnoreCase(
+                    nome, nome));
+
+    return "equipamentos/lista";
+}
+
+// CREATE (1/2): formulário vazio
+@GetMapping("/novo")
+public String novo(Model model) {
+    model.addAttribute("equipamento", new Equipamento());
+    carregarCombos(model);
+    return "equipamentos/form";
+}
 
     // CREATE (2/2) e UPDATE
     // Recebe os dados enviados pelo formulário, valida e salva no banco.
